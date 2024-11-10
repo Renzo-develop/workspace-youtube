@@ -1,0 +1,83 @@
+version: "3.8"
+services:  
+  msclient:
+    build: .\ms-client
+    container_name: "msclient-dockercompose"
+    ports:
+      - 8080:8080
+    depends_on:
+      configserver:
+        condition: service_healthy
+    networks:
+      - amigoprogramador
+
+  msdebitcard:
+    build: .\ms-debitcard
+    container_name: "msdebitcard-dockercompose"
+    ports:
+      - 8081:8081
+    depends_on:
+      configserver:
+        condition: service_healthy
+    networks:
+      - amigoprogramador
+  
+  mstransaction:
+    build: .\ms-transaction
+    container_name: "mstransaction-dockercompose"
+    ports:
+      - 8082:8082
+    depends_on:
+      configserver:
+        condition: service_healthy
+    networks:
+      - amigoprogramador
+  
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-dockercompose
+    ports:
+      - 27017:27017  
+    networks:
+      - amigoprogramador
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    restart: always
+    ports:
+      - 2181:2181
+    networks:
+      - amigoprogramador
+      
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_CREATE_TOPICS=TRANSFERENCE:1:1
+      - KAFKA_BROKER_ID=1
+    networks:
+      - amigoprogramador 
+
+  configserver:
+    build: .\config-server
+    container_name: "configserver-dockercompose"
+    ports:
+      - 8888:8888
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+        interval: 10s
+        retries: 3
+        start_period: 10s
+    networks:
+      - amigoprogramador   
+networks:
+  amigoprogramador:
