@@ -2,10 +2,8 @@ package com.amigo.programador.msdebitcard.controller;
 
 import javax.validation.Valid;
 
-import com.amigo.programador.library.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
-import static com.amigo.programador.utils.ApiResponseUtils.buildApiResponse;
-
 @RestController
 @RequestMapping("/debitcard")
 @Slf4j
@@ -40,28 +34,24 @@ public class DebitCardController {
 	private DebitCardService debitCardService;
 	
 	@GetMapping("/findall")
-	public Mono<ResponseEntity<ApiResponse<List<DebitCard>>>> findAll() {
+	public Flux<DebitCard> findAll() {
 		log.info("Connecting to config server? -> " + configserver);
-		return debitCardService.findAll()
-						.map(cards -> ResponseEntity.ok(cards));
+		return debitCardService.findAll();
 	}
 	
 	@GetMapping("/findbyid/{id}")
-	public Mono<ResponseEntity<ApiResponse<DebitCard>>> findById(@PathVariable Long id) {
-		return debitCardService.findById(id)
-						.map(card -> ResponseEntity.ok(card));
+	public Flux<DebitCard> findById(@PathVariable Long id) {
+		return debitCardService.findAll();
 	}
 	
 	@GetMapping("/findbycardnumber/{cardNumber}")
-	public Mono<ResponseEntity<ApiResponse<DebitCard>>> findByCardNumber(@PathVariable String cardNumber) {
-		return debitCardService.findByCardNumber(cardNumber)
-						.map(card -> ResponseEntity.ok(card));
+	public Mono<DebitCard> findByCardNumber(@PathVariable String cardNumber) {
+		return debitCardService.findByCardNumber(cardNumber);
 	}
 	
 	@PostMapping("/create")
-	public Mono<ResponseEntity<ApiResponse<DebitCard>>> createDebitCard(@Valid @RequestBody DebitCard debitCard) {
-		return debitCardService.createDebitCard(debitCard)
-						.map(card -> ResponseEntity.ok(card));
+	public Mono<DebitCard> createDebitCard(@Valid @RequestBody DebitCard debitCard) {
+		return debitCardService.createDebitCard(debitCard);
 	}
 	
 	@PutMapping("/update")
