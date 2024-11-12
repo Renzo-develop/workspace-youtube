@@ -16,7 +16,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class TransactionService {
 
-	WebClient dcWebClient = WebClient.create("http://msdebitcard:8081/debitcard");
+	@Autowired
+	private WebClient debitCardWeb;
 	
 	@Autowired
 	private TransactionRepository repository;
@@ -30,11 +31,11 @@ public class TransactionService {
 	
 	public Mono<Transaction> createTransactionT(Transaction transaction) {
 		
-		return dcWebClient.get().uri("/findbycardnumber/{cardNumber}", transaction.getOrigin().getCardNumber())
+		return debitCardWeb.get().uri("/findbycardnumber/{cardNumber}", transaction.getOrigin().getCardNumber())
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(DebitCard.class)
-				.flatMap(origin -> dcWebClient.get().uri("/findbycardnumber/{cardNumber}", transaction.getDestination().getCardNumber())
+				.flatMap(origin -> debitCardWeb.get().uri("/findbycardnumber/{cardNumber}", transaction.getDestination().getCardNumber())
 									.accept(MediaType.APPLICATION_JSON)
 									.retrieve()
 									.bodyToMono(DebitCard.class)
@@ -52,7 +53,7 @@ public class TransactionService {
 	
 	public Mono<Transaction> createTransactionDC(Transaction transaction) {
 		
-		return dcWebClient.get().uri("/findbycardnumber/{cardNumber}", transaction.getOrigin().getCardNumber())
+		return debitCardWeb.get().uri("/findbycardnumber/{cardNumber}", transaction.getOrigin().getCardNumber())
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(DebitCard.class)

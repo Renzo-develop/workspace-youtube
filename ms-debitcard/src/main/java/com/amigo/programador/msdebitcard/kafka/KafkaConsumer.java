@@ -23,15 +23,7 @@ public class KafkaConsumer {
 	private DebitCardService service;
 	
 	private static final String TOPIC = "TRANSFERENCE";
-	
-	@Bean
-	public NewTopic topic() {
-		return TopicBuilder.name(TOPIC)
-				.partitions(10)
-				.replicas(1)
-				.build();
-	}
-	
+
 	@KafkaListener(id="consumerKafka", topics = TOPIC)
 	public void getMessage(String message) throws JsonMappingException, JsonProcessingException {
 		DebitCard debitCard = objectMapper.readValue(message, DebitCard.class);

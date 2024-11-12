@@ -15,8 +15,9 @@ import reactor.core.publisher.Mono;
 @Service
 public class DebitCardService {
 
-	WebClient webMsClient = WebClient.create("http://msclient:8080/client");
-	
+	@Autowired
+	private WebClient webMsClient;
+
 	@Autowired
 	private DebitCardRepository debitCardRepository;
 	

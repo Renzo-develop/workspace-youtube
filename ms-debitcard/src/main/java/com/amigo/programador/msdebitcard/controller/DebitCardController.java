@@ -27,15 +27,11 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class DebitCardController {
 
-	@Value("${properties.config.server}")
-	private String configserver;
-	
 	@Autowired
 	private DebitCardService debitCardService;
 	
 	@GetMapping("/findall")
 	public Flux<DebitCard> findAll() {
-		log.info("Connecting to config server? -> " + configserver);
 		return debitCardService.findAll();
 	}
 	
