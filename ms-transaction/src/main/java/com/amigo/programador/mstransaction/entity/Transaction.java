@@ -2,8 +2,8 @@ package com.amigo.programador.mstransaction.entity;
 
 import java.time.LocalDateTime;
 
-import com.amigo.programador.library.DebitCard;
 
+import com.amigo.programador.library.model.DebitCard;
 import lombok.Data;
 
 @Data

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.amigo.programador</groupId>
 	<artifactId>ms-debitcard</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>ms-debitcard</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -50,7 +50,7 @@
 	    <dependency>
 	    	<groupId>com.amigo.programador</groupId>
 			<artifactId>library</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.13-SNAPSHOT</version>
 	    </dependency>
 	    
 	    <dependency>

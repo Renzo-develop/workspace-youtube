@@ -10,6 +10,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface DebitCardRepository extends ReactiveMongoRepository<DebitCard, Long> {
 	
-	public Mono<DebitCard> findByCardNumber(String cardNumber); 
-	
+	public Mono<DebitCard> findByCardNumber(String cardNumber);
+
+	public Mono<Long> countByCardNumber(String cardNumber);
+
 }

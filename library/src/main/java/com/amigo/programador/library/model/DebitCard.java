@@ -1,4 +1,4 @@
-package com.amigo.programador.library;
+package com.amigo.programador.library.model;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class DebitCard {
+
 	private Long id;
 	
 	private String cardNumber;
@@ -16,4 +17,5 @@ public class DebitCard {
 	private LocalDate expirationDate;
 	
 	private Client client;
+
 }
