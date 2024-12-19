@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/Renzo-develop/config-server-files.git
-          default-label: video8
+          default-label: master
           clone-on-start: true
 management:
   endpoint:

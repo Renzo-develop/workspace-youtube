@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ms-debitcard
+  config:
+    import: optional:configserver:http://configserver:8888

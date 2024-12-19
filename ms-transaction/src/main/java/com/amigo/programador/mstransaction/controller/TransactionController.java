@@ -12,6 +12,8 @@ import com.amigo.programador.mstransaction.entity.Transaction;
 import com.amigo.programador.mstransaction.service.TransactionService;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
@@ -26,14 +28,14 @@ public class TransactionController {
 	}
 	
 	@PostMapping("/create")
-	public Mono<ResponseEntity<ApiResponse>> create(@RequestBody Transaction transaction) {
+	public Mono<ResponseEntity<ApiResponse>> create(@Valid @RequestBody Transaction transaction) {
 		switch(transaction.getTransactionType()) {
 			case DEPOSIT:
 			case CASH_OUT:
-				return service.createTransactionDC(transaction)
+				return service.createDepositOrCashOut(transaction)
 								.map(response -> ResponseEntity.ok().body(response));
 			case TRANSFER:
-				return service.createTransactionT(transaction)
+				return service.createTransaction(transaction)
 								.map(response -> ResponseEntity.ok().body(response));
 			default:
 				return Mono.empty();

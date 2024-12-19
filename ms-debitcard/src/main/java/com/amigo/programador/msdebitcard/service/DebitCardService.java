@@ -4,6 +4,7 @@ import com.amigo.programador.library.model.ApiResponse;
 import com.amigo.programador.library.model.Client;
 import com.amigo.programador.library.model.CustomException;
 import com.amigo.programador.library.model.CustomExceptionResponse;
+import com.amigo.programador.library.util.LibraryUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
+import static com.amigo.programador.library.util.LibraryUtil.buildApiResponse;
+import static com.amigo.programador.library.util.LibraryUtil.buildCustomException;
 import static com.amigo.programador.library.util.LibraryUtil.getRootCause;
 
 @Service
@@ -38,35 +41,20 @@ public class DebitCardService {
 	public Mono<ApiResponse> findAll() {
 		return debitCardRepository.findAll()
 						.collectList()
-						.map(list -> ApiResponse.builder()
-										.message("Listing Debit cards")
-										.response(list)
-										.build())
-						.switchIfEmpty(Mono.just(ApiResponse.builder()
-										.message("No Debit cards created yet")
-										.build()));
+						.map(list -> buildApiResponse("Listing Debit cards", list))
+						.switchIfEmpty(Mono.just(buildApiResponse("No Debit cards created yet", null)));
 	}
 	
 	public Mono<ApiResponse> findById(Long id) {
 		return debitCardRepository.findById(id)
-						.map(card -> ApiResponse.builder()
-										.message("Debit card was found")
-										.response(card)
-										.build())
-						.switchIfEmpty(Mono.just(ApiResponse.builder()
-										.message("Debit card doesn't exists")
-										.build()));
+						.map(card -> buildApiResponse("Debit card was found", card))
+						.switchIfEmpty(Mono.just(buildApiResponse("Debit card doesn't exists", null)));
 	}
 	
 	public Mono<ApiResponse> findByCardNumber(String cardNumber) {
 		return debitCardRepository.findByCardNumber(cardNumber)
-						.map(card -> ApiResponse.builder()
-										.message("Debit card was found")
-										.response(card)
-										.build())
-						.switchIfEmpty(Mono.just(ApiResponse.builder()
-										.message("Debit card doesn't exists")
-										.build()));
+						.map(card -> buildApiResponse("Debit card was found", card))
+						.switchIfEmpty(Mono.just(buildApiResponse("Debit card doesn't exists", null)));
 	}
 
 	public Mono<DebitCard> updateDebitCard(DebitCard debitCard) {
@@ -78,37 +66,19 @@ public class DebitCardService {
 			.flatMap(client -> {
 				debitCard.setBalance(0.0);
 				debitCard.setClient(client);
-				validateCardNumberUnique(debitCard);
 				return debitCardRepository.insert(debitCard)
-								.map(card -> ApiResponse.builder()
-												.message("Debit card was created")
-												.response(card)
-												.build())
-								.doOnError(error -> log.error("Error creating client - {}", error));
+								.map(card -> buildApiResponse("Debit card was created", card));
 			})
-			.onErrorResume(error -> Mono.error(
-							CustomException.builder()
-											.status(HttpStatus.CONFLICT)
-											.response(CustomExceptionResponse.builder()
-															.error(getRootCause(error))
-															.message(error.getMessage())
-															.build())
-											.build()))
-			.switchIfEmpty(Mono.just(ApiResponse.builder()
-							.message("Selected client doesn't exists")
-							.build()));
+			.doOnError(error -> log.error("Error creating client - {}", error))
+			.onErrorResume(error -> Mono.error(buildCustomException(HttpStatus.CONFLICT, error)))
+			.switchIfEmpty(Mono.just(buildApiResponse("Selected client doesn't exists", null)));
 	}
 	
 	public Mono<ApiResponse> deleteDebitCard(Long id) {
 		return debitCardRepository.findById(id)
 						.flatMap(client -> debitCardRepository.deleteById(id)
-										.then(Mono.just(ApiResponse.builder()
-														.message("Debit card was deleted")
-														.response(client)
-														.build())))
-						.switchIfEmpty(Mono.just(ApiResponse.builder()
-										.message("Debit card doesn't exists")
-										.build()));
+										.then(Mono.just(buildApiResponse("Debit card was deleted", client))))
+						.switchIfEmpty(Mono.just(buildApiResponse("Debit card doesn't exists", null)));
 	}
 
 	private Mono<Client> findClientById(DebitCard debitCard) {
@@ -117,7 +87,7 @@ public class DebitCardService {
 						.retrieve()
 						.bodyToMono(ApiResponse.class)
 						.filter(apiResponse -> Objects.nonNull(apiResponse.getResponse()))
-						.map(apiResponse -> objectMapper.convertValue(apiResponse.getResponse(), Client.class))
+						.map(apiResponse -> objectMapper.convertValue(apiResponse.getResponse(), Client.class));
 	}
 
 	private void validateCardNumberUnique(DebitCard debitCard) {

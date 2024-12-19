@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
+import com.amigo.programador.library.annotation.UniqueField;
 import com.amigo.programador.library.model.Client;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -19,6 +20,7 @@ public class DebitCard {
 	private Long id;
 	
 	@NotNull
+	@UniqueField(fieldName = "cardNumber", entityClass = DebitCard.class, message = "Duplicated card number")
 	private String cardNumber;
 	
 	private Double balance;
