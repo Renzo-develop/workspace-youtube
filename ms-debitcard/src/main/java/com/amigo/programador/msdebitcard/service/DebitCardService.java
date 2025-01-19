@@ -28,6 +28,14 @@ public class DebitCardService {
 		return debitCardRepository.findById(id);
 	}
 	
+	public Mono<DebitCard> findByCardNumber(String cardNumber) {
+		return debitCardRepository.findByCardNumber(cardNumber);
+	}
+	
+	public Mono<DebitCard> updateDebitCard(DebitCard debitCard) {
+		return debitCardRepository.save(debitCard);
+	}
+	
 	public Mono<DebitCard> createDebitCard(DebitCard debitCard) {
 		return webMsClient.get().uri("/findbyid/{id}", debitCard.getClient().getId())
 			.accept(MediaType.APPLICATION_JSON)
