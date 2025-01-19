@@ -26,4 +26,8 @@ public class ClientService {
 	 public Mono<Client> createClient(Client client) {
 		 return clientRepository.insert(client);
 	 }
+	 
+	 public Mono<Void> deleteClient(Long id) {
+		 return clientRepository.deleteById(id);
+	 }
 }
