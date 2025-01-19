@@ -3,6 +3,7 @@ package com.amigo.programador.msdebitcard.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +18,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amigo.programador.msdebitcard.entity.DebitCard;
 import com.amigo.programador.msdebitcard.service.DebitCardService;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/debitcard")
+@Slf4j
 public class DebitCardController {
+
+	@Value("${properties.config.server}")
+	private String configserver;
 	
 	@Autowired
 	private DebitCardService debitCardService;
 	
 	@GetMapping("/findall")
 	public Flux<DebitCard> findAll() {
+		log.info("Connecting to config server? -> " + configserver);
 		return debitCardService.findAll();
 	}
 	
