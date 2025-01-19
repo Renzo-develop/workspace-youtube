@@ -29,6 +29,14 @@ public class TransactionController {
 	
 	@PostMapping("/create")
 	public Mono<Transaction> create(@RequestBody Transaction transaction) {
-		return service.createTransaction(transaction);
+		switch(transaction.getTransactionType()) {
+			case DEPOSIT:
+			case CASH_OUT:
+				return service.createTransactionDC(transaction);
+			case TRANSFER:
+				return service.createTransactionT(transaction);
+			default:
+				return Mono.empty();
+		}
 	}
 }
