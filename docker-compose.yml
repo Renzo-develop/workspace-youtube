@@ -6,10 +6,28 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - mongodb  
+      - mongodb
+    networks:
+      - amigoprogramador
 
+  msdebitcard:
+    build: .\ms-debitcard
+    container_name: "msdebitcard-dockercompose"
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+      - msclient
+    networks:
+      - amigoprogramador
+      
   mongodb:
     image: mongo:latest
     container_name: mongodb-dockercompose
     ports:
-      - 27017:27017      
+      - 27017:27017  
+    networks:
+      - amigoprogramador
+      
+networks:
+  amigoprogramador:
