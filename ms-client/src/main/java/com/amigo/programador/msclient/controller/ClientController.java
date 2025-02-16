@@ -2,7 +2,7 @@ package com.amigo.programador.msclient.controller;
 
 import javax.validation.Valid;
 
-import com.amigo.programador.library.ApiResponse;
+import com.amigo.programador.library.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amigo.programador.msclient.entity.Client;
 import com.amigo.programador.msclient.service.ClientService;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController

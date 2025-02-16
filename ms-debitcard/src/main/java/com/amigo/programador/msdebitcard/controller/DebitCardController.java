@@ -2,8 +2,10 @@ package com.amigo.programador.msdebitcard.controller;
 
 import javax.validation.Valid;
 
+import com.amigo.programador.library.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,32 +33,38 @@ public class DebitCardController {
 	private DebitCardService debitCardService;
 	
 	@GetMapping("/findall")
-	public Flux<DebitCard> findAll() {
-		return debitCardService.findAll();
+	public Mono<ResponseEntity<ApiResponse>> findAll() {
+		return debitCardService.findAll()
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 	
 	@GetMapping("/findbyid/{id}")
-	public Flux<DebitCard> findById(@PathVariable Long id) {
-		return debitCardService.findAll();
+	public Mono<ResponseEntity<ApiResponse>> findById(@PathVariable Long id) {
+		return debitCardService.findById(id)
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 	
 	@GetMapping("/findbycardnumber/{cardNumber}")
-	public Mono<DebitCard> findByCardNumber(@PathVariable String cardNumber) {
-		return debitCardService.findByCardNumber(cardNumber);
+	public Mono<ResponseEntity<ApiResponse>> findByCardNumber(@PathVariable String cardNumber) {
+		return debitCardService.findByCardNumber(cardNumber)
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 	
 	@PostMapping("/create")
-	public Mono<DebitCard> createDebitCard(@Valid @RequestBody DebitCard debitCard) {
-		return debitCardService.createDebitCard(debitCard);
+	public Mono<ResponseEntity<ApiResponse>> createDebitCard(@Valid @RequestBody DebitCard debitCard) {
+		return debitCardService.createDebitCard(debitCard)
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 	
 	@PutMapping("/update")
-	public Mono<DebitCard> updateDebitCard(@RequestBody DebitCard debitCard) {
-		return debitCardService.updateDebitCard(debitCard);
+	public Mono<ResponseEntity<ApiResponse>> updateDebitCard(@RequestBody DebitCard debitCard) {
+		return debitCardService.updateDebitCard(debitCard)
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public Mono<Void> deleteDebitCard(@PathVariable Long id) {
-		return debitCardService.deleteDebitCard(id);
+	public Mono<ResponseEntity<ApiResponse>> deleteDebitCard(@PathVariable Long id) {
+		return debitCardService.deleteDebitCard(id)
+						.map(response -> ResponseEntity.ok().body(response));
 	}
 }

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import com.amigo.programador.library.Client;
+import com.amigo.programador.library.model.Client;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;

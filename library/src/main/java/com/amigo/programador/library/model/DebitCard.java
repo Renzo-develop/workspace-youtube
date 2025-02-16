@@ -1,4 +1,4 @@
-package com.amigo.programador.library;
+package com.amigo.programador.library.model;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
