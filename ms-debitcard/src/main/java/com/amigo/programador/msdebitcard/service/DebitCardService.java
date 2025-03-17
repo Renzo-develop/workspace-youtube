@@ -60,7 +60,8 @@ public class DebitCardService {
 				debitCard.setClient(client);
 				return debitCardRepository.insert(debitCard)
 								.map(card -> buildApiResponse("DebitCard created successfully", card));
-			});
+			})
+			.switchIfEmpty(Mono.just(buildApiResponse("Client doesn't exists", null)));
 	}
 
 	public Mono<ApiResponse> deleteDebitCard(Long id) {
