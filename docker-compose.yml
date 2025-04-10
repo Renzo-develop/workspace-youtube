@@ -4,10 +4,12 @@ services:
     build: .\ms-client
     container_name: "msclient-dockercompose"
     ports:
-      - 8080:8080
+      - 8081:8081
     depends_on:
       configserver:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - amigoprogramador
 
@@ -15,10 +17,12 @@ services:
     build: .\ms-debitcard
     container_name: "msdebitcard-dockercompose"
     ports:
-      - 8081:8081
+      - 8082:8082
     depends_on:
       configserver:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - amigoprogramador
   
@@ -26,10 +30,12 @@ services:
     build: .\ms-transaction
     container_name: "mstransaction-dockercompose"
     ports:
-      - 8082:8082
+      - 8083:8083
     depends_on:
       configserver:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - amigoprogramador
   
