@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.amigo.programador</groupId>
 	<artifactId>library</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<name>library</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
