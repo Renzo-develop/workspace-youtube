@@ -1,4 +1,4 @@
-package com.amigo.programador.msclient.configuration;
+package com.amigo.programador.mstransaction.config;
 
 import com.amigo.programador.library.interceptor.CustomInterceptor;
 import org.springframework.context.annotation.Configuration;

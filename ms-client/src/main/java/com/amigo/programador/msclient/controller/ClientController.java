@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/client")
-public class ClientController {
+public class   ClientController {
 
 	@Autowired
 	private ClientService clientService;
