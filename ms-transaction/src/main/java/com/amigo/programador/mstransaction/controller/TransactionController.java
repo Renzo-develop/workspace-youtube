@@ -15,6 +15,7 @@ import com.amigo.programador.mstransaction.service.TransactionService;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.lang.reflect.InvocationTargetException;
 
 @RestController
 @RequestMapping("/transaction")
@@ -30,7 +31,7 @@ public class TransactionController {
 	}
 	
 	@PostMapping("/create")
-	public Mono<ResponseEntity<ApiResponse>> create(@Valid @RequestBody Transaction transaction) {
+	public Mono<ResponseEntity<ApiResponse>> create(@Valid @RequestBody Transaction transaction) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		switch(transaction.getTransactionType()) {
 			case DEPOSIT:
 			case CASH_OUT:
@@ -45,7 +46,7 @@ public class TransactionController {
 	}
 
 	@GetMapping("/delete/{id}")
-	public Mono<ResponseEntity<ApiResponse>> delete(@PathVariable String id) {
+	public Mono<ResponseEntity<ApiResponse>> delete(@PathVariable Long id) {
 		return service.deleteClient(id)
 			.map(apiResponse -> ResponseEntity.ok(apiResponse));
 	}

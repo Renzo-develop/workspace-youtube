@@ -7,6 +7,7 @@ import com.amigo.programador.library.model.DebitCard;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @Data
@@ -16,6 +17,7 @@ public class Transaction {
 	private Long id;
 
 	@NotNull
+	@Pattern(regexp = "^[0-9]{4}$", message = "TransactionCode should have 4 digits, Ex: 5631")
 	private String transactionCode;
 
 	@NotNull

@@ -3,6 +3,7 @@ package com.amigo.programador.msdebitcard.entity;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -19,6 +20,7 @@ public class DebitCard {
 	private Long id;
 	
 	@NotNull
+	@Pattern(regexp = "^[0-9]{3}-[0-9]{4}$", message = "Incorrect cardNumber pattern, Ex: 123-4567")
 	private String cardNumber;
 	
 	private Double balance;

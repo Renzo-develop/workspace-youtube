@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestController
 @RequestMapping("/debitcard")
 @Slf4j
@@ -51,7 +53,7 @@ public class DebitCardController {
 	}
 	
 	@PostMapping("/create")
-	public Mono<ResponseEntity<ApiResponse>> createDebitCard(@Valid @RequestBody DebitCard debitCard) {
+	public Mono<ResponseEntity<ApiResponse>> createDebitCard(@Valid @RequestBody DebitCard debitCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		return debitCardService.createDebitCard(debitCard)
 						.map(response -> ResponseEntity.ok().body(response));
 	}

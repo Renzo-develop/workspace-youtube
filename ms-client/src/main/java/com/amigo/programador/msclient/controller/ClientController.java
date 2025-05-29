@@ -19,6 +19,8 @@ import com.amigo.programador.msclient.service.ClientService;
 
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestController
 @RequestMapping("/client")
 public class   ClientController {
@@ -39,7 +41,7 @@ public class   ClientController {
 	}
 	
 	@PostMapping("/create")
-	public Mono<ResponseEntity<ApiResponse>> createClient(@Valid @RequestBody Client client) {
+	public Mono<ResponseEntity<ApiResponse>> createClient(@Valid @RequestBody Client client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		return clientService.createClient(client)
 						.map(apiResponse -> ResponseEntity.status(HttpStatus.OK).body(apiResponse));
 	}

@@ -2,7 +2,7 @@ version: "3.8"
 services:  
   msclient:
     build: .\ms-client
-    container_name: "msclient-dockercompose"
+    container_name: "client-container"
     ports:
       - 8080:8080
     depends_on:
@@ -13,7 +13,7 @@ services:
 
   msdebitcard:
     build: .\ms-debitcard
-    container_name: "msdebitcard-dockercompose"
+    container_name: "msdebitcard-container"
     ports:
       - 8081:8081
     depends_on:
@@ -24,7 +24,7 @@ services:
   
   mstransaction:
     build: .\ms-transaction
-    container_name: "mstransaction-dockercompose"
+    container_name: "mstransaction-container"
     ports:
       - 8082:8082
     depends_on:
@@ -35,7 +35,7 @@ services:
   
   mongodb:
     image: mongo:latest
-    container_name: mongodb-dockercompose
+    container_name: mongodb-container
     ports:
       - 27017:27017  
     networks:
@@ -43,7 +43,7 @@ services:
   
   zookeeper:
     image: wurstmeister/zookeeper
-    container_name: zookeeper
+    container_name: zookeeper-container
     restart: always
     ports:
       - 2181:2181
@@ -52,7 +52,7 @@ services:
       
   kafka:
     image: wurstmeister/kafka
-    container_name: kafka
+    container_name: kafka-container
     restart: always
     depends_on:
       - zookeeper
@@ -69,7 +69,7 @@ services:
 
   configserver:
     build: .\config-server
-    container_name: "configserver-dockercompose"
+    container_name: "configserver-container"
     ports:
       - 8888:8888
     healthcheck:

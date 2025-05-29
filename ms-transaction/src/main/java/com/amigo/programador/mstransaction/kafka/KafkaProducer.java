@@ -23,7 +23,6 @@ public class KafkaProducer {
 	private ObjectMapper objectMapper;
 
 	public void updateDebitCardBalance(DebitCard debitCard) {
-
 		try {
 			log.debug("Sending DebitCard {} to the Kafka topic", debitCard);
 			String debitCardString = objectMapper.writeValueAsString(debitCard);

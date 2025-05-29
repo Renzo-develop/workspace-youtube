@@ -1,9 +1,11 @@
 package com.amigo.programador.msclient.service;
 
+import static com.amigo.programador.library.util.DataValidaton.isUniqueValue;
 import static com.amigo.programador.library.util.LibraryUtil.buildApiResponse;
 import static com.amigo.programador.library.util.LibraryUtil.buildCustomException;
 
 import com.amigo.programador.library.model.ApiResponse;
+import com.amigo.programador.library.util.DataValidaton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import com.amigo.programador.msclient.entity.Client;
 import com.amigo.programador.msclient.repository.ClientRepository;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
@@ -38,8 +41,10 @@ public class ClientService {
 			 .doOnError(ex -> buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex));
 	 }
 	 
-	 public Mono<ApiResponse> createClient(Client client) {
-		 return clientRepository.insert(client)
+	 public Mono<ApiResponse> createClient(Client client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+		 return isUniqueValue(client.getName(), "findByName", clientRepository)
+			 .then(isUniqueValue(client.getName(), "findByName", clientRepository))
+			  .then(clientRepository.insert(client))
 				.map(c -> buildApiResponse("Client has been created", c))
 				.doOnError(ex -> log.error("Error creating client - {}", ex.getMessage()))
 				.onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
