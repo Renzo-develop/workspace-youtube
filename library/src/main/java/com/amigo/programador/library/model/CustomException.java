@@ -10,6 +10,6 @@ public class CustomException extends RuntimeException {
 
 	private HttpStatus httpStatus;
 
-	private CustomExceptionResponse response;
+	private CustomResponse response;
 
 }

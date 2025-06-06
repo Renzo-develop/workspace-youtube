@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.amigo.programador.mstransaction.entity.Transaction;
 
 @Repository
-public interface TransactionRepository  extends ReactiveMongoRepository<Transaction, String>{
+public interface TransactionRepository  extends ReactiveMongoRepository<Transaction, Long>{
 
 }

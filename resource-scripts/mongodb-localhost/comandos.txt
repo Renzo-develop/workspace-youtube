@@ -1,0 +1,5 @@
+Step 1:
+docker pull mongodb/mongodb-community-server:latest
+
+Step 2:
+docker run --name mongodb-localhost -p 27017:27017 -d mongodb/mongodb-community-server:latest

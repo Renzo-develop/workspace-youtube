@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CustomExceptionResponse {
+public class CustomResponse {
 
-	private String error;
+	private Class error;
 
 	private String message;
 
