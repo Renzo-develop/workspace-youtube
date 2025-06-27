@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+        - id: ms-client-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/example/**
+          filters:
+            - RewritePath=/example/(?<segment>.*), /client/${segment}
+            - AddRequestHeader=X-Request-Example, Gateway-Request
+            - AddResponseHeader=X-Response-Example, Gateway-Response
+server:
+  port: 9999
+
+
