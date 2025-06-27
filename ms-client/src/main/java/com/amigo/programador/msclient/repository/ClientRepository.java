@@ -6,7 +6,11 @@ import com.amigo.programador.msclient.entity.Client;
 
 import reactor.core.publisher.Mono;
 
+import javax.smartcardio.Card;
+
 @Repository
 public interface ClientRepository extends ReactiveMongoRepository<Client, Long> {
-	
+
+  public Mono<Client> findByDni(String dni);
+
 }

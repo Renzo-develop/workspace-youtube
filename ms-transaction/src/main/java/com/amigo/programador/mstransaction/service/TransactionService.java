@@ -13,10 +13,12 @@ import reactor.core.publisher.Mono;
 import com.amigo.programador.mstransaction.repository.*;
 
 import java.lang.management.MonitorInfo;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 
 import static com.amigo.programador.library.util.LibraryUtil.buildApiResponse;
 import static com.amigo.programador.library.util.LibraryUtil.buildCustomException;
+import static com.amigo.programador.library.util.ValidateUtil.validateDuplicate;
 
 @Service
 public class TransactionService {
@@ -38,9 +40,10 @@ public class TransactionService {
 			.onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
 	}
 	
-	public Mono<ApiResponse> createTransference(Transaction transaction) {
+	public Mono<ApiResponse> createTransference(Transaction transaction) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		
-		return msDebitCard.findByCardNumber(transaction.getOrigin().getCardNumber())
+		return validateDuplicate(transaction.getTransactionCode(), "findByTransactionCode", repository, Transaction.class)
+			.then(msDebitCard.findByCardNumber(transaction.getOrigin().getCardNumber()))
 			.flatMap(origin -> msDebitCard.findByCardNumber(transaction.getDestination().getCardNumber())
 								.filter(destination -> origin.getBalance() > 0)
 								.map(destination -> processTransaction(origin, destination, transaction))
@@ -55,9 +58,10 @@ public class TransactionService {
 			.onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
 	}
 	
-	public Mono<ApiResponse> createDepositOrCashOut(Transaction transaction) {
+	public Mono<ApiResponse> createDepositOrCashOut(Transaction transaction) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 		
-		return msDebitCard.findByCardNumber(transaction.getOrigin().getCardNumber())
+		return  validateDuplicate(transaction.getTransactionCode(), "findByTransactionCode", repository, Transaction.class)
+			.then(msDebitCard.findByCardNumber(transaction.getOrigin().getCardNumber()))
 			.map(origin -> processTransaction(origin, null, transaction))
 			.filter(tr -> tr.getOrigin().getBalance() >= 0)
 			.flatMap(tr -> repository.insert(tr)

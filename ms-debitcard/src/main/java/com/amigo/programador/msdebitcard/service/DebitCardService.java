@@ -2,6 +2,7 @@ package com.amigo.programador.msdebitcard.service;
 
 import static com.amigo.programador.library.util.LibraryUtil.buildApiResponse;
 import static com.amigo.programador.library.util.LibraryUtil.buildCustomException;
+import static com.amigo.programador.library.util.ValidateUtil.validateDuplicate;
 
 import com.amigo.programador.msdebitcard.third.api.MsClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.amigo.programador.msdebitcard.repository.DebitCardRepository;
 
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 @Service
@@ -56,8 +58,9 @@ public class DebitCardService {
 			.onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
 	}
 	
-	public Mono<ApiResponse> createDebitCard(DebitCard debitCard) {
-		return msClient.findClientById(debitCard.getClient().getId())
+	public Mono<ApiResponse> createDebitCard(DebitCard debitCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+		return validateDuplicate(debitCard.getCardNumber(), "findByCardNumber", debitCardRepository, DebitCard.class)
+			.then(msClient.findClientById(debitCard.getClient().getId()))
 			.flatMap(client -> {
 				debitCard.setBalance(0.0);
 				debitCard.setClient(client);

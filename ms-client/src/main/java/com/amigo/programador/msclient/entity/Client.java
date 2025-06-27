@@ -14,5 +14,8 @@ public class Client {
 	private String name;
 
 	@NotNull
+	private String dni;
+
+	@NotNull
 	private Integer age;
 }

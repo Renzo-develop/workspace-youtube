@@ -2,9 +2,11 @@ package com.amigo.programador.msclient.service;
 
 import static com.amigo.programador.library.util.LibraryUtil.buildApiResponse;
 import static com.amigo.programador.library.util.LibraryUtil.buildCustomException;
+import static com.amigo.programador.library.util.ValidateUtil.validateDuplicate;
 
 import com.amigo.programador.library.model.ApiResponse;
 import com.amigo.programador.library.model.CustomException;
+import com.amigo.programador.library.util.ValidateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 import com.amigo.programador.msclient.entity.Client;
 import com.amigo.programador.msclient.repository.ClientRepository;
 import reactor.core.publisher.Mono;
+
+import javax.smartcardio.Card;
+import java.lang.reflect.InvocationTargetException;
 
 @Service
 @Slf4j
@@ -35,8 +40,9 @@ public class ClientService {
 			 .onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
 	 }
 	 
-	 public Mono<ApiResponse> createClient(Client client) {
-		 return clientRepository.insert(client)
+	 public Mono<ApiResponse> createClient(Client client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+		 return validateDuplicate(client.getDni(), "findByDni", clientRepository, Client.class)
+			 .then(clientRepository.insert(client))
 			 .map(c -> buildApiResponse("Client has been created", c))
 			 .doOnError(ex -> log.error("Error creating client - {}", ex.getMessage()))
 			 .onErrorResume(ex -> Mono.error(buildCustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex)));
