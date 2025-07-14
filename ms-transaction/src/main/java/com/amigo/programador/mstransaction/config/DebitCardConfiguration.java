@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class DebitCardConfiguration {
 
 	@Bean
-	public WebClient buildWebClient(@Value("${application.consume.msdebitcard.url}") String url) {
+	public WebClient buildWebClient(@Value("${spring.application.consume.msdebitcard.url}") String url) {
 		WebClient webMsClient = WebClient.create(url);
 		return webMsClient;
 	}

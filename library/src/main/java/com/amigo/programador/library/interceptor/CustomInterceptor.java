@@ -17,13 +17,13 @@ public class CustomInterceptor {
 
 	@ExceptionHandler({CustomException.class})
 	protected ResponseEntity<CustomResponse> handleCustomException(CustomException ex) {
-		log.info("Interceptor CustomException");
+		log.info("Interceptor CustomException: {}", ex);
 		return ResponseEntity.status(ex.getHttpStatus()).body(ex.getResponse());
 	}
 
 	@ExceptionHandler({Throwable.class})
 	protected <T> ResponseEntity<CustomResponse> handleDefaultHandlerExceptionResolver(T ex) {
-		log.info("Interceptor Throwable");
+		log.info("Interceptor Throwable: {}", ex);
 		Throwable th = (Throwable) ex;
  		buildCustomResponse(th);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildCustomResponse(th));
