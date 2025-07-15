@@ -1,0 +1,14 @@
+package amigo.programador.msclient.repository;
+
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
+import amigo.programador.msclient.entity.Client;
+
+import reactor.core.publisher.Mono;
+
+@Repository
+public interface ClientRepository extends ReactiveMongoRepository<Client, Long> {
+
+  public Mono<Client> findByDni(String dni);
+
+}
