@@ -1,49 +1,86 @@
-version: "3.8"
-services:  
-  msclient:
-    build: .\ms-client
-    container_name: "msclient-dockercompose"
-    ports:
-      - 8080:8080
-    depends_on:
-      configserver:
-        condition: service_healthy
-    networks:
-      - amigoprogramador
 
-  msdebitcard:
-    build: .\ms-debitcard
-    container_name: "msdebitcard-dockercompose"
+services:  
+  ms-client:
+    build: .\ms-client
+    image: amigoprogramador/msclient:latest
+    container_name: amigoprogramador-msclient
     ports:
       - 8081:8081
     depends_on:
-      configserver:
+      config-server:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - amigoprogramador
-  
-  mstransaction:
-    build: .\ms-transaction
-    container_name: "mstransaction-dockercompose"
+
+  ms-debitcard:
+    build: .\ms-debitcard
+    image: amigoprogramador/msdebitcard:latest
+    container_name: amigoprogramador-msdebitcard
     ports:
       - 8082:8082
     depends_on:
-      configserver:
+      config-server:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
     networks:
       - amigoprogramador
   
+  ms-transaction:
+    build: .\ms-transaction
+    image: amigoprogramador/mstransaction:latest
+    container_name: amigoprogramador-mstransaction
+    ports:
+      - 8083:8083
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    networks:
+      - amigoprogramador
+
+  api-gateway:
+    build: .\api-gateway
+    image: amigoprogramador/apigateway:latest
+    container_name: amigoprogramador-apigateway
+    ports:
+      - 9999:9999
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    networks:
+      - amigoprogramador  
+
+  config-server:
+    build: .\config-server
+    image: amigoprogramador/config-server:latest
+    container_name: amigoprogramador-configserver
+    ports:
+      - 8888:8888
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+        interval: 10s
+        retries: 3
+        start_period: 10s
+    networks:
+      - amigoprogramador   
+
   mongodb:
     image: mongo:latest
-    container_name: mongodb-dockercompose
+    container_name: amigoprogramador-mongodb
     ports:
-      - 27017:27017  
+      - 27017:27017      
     networks:
       - amigoprogramador
   
   zookeeper:
     image: wurstmeister/zookeeper
-    container_name: zookeeper
+    container_name: amigoprogramador-zookeeper
     restart: always
     ports:
       - 2181:2181
@@ -52,7 +89,7 @@ services:
       
   kafka:
     image: wurstmeister/kafka
-    container_name: kafka
+    container_name: amigoprogramador-kafka
     restart: always
     depends_on:
       - zookeeper
@@ -67,17 +104,5 @@ services:
     networks:
       - amigoprogramador 
 
-  configserver:
-    build: .\config-server
-    container_name: "configserver-dockercompose"
-    ports:
-      - 8888:8888
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
-        interval: 10s
-        retries: 3
-        start_period: 10s
-    networks:
-      - amigoprogramador   
 networks:
   amigoprogramador:
