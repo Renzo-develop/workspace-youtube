@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/Amigo-Programador/config-server-files.git
-          default-label: video13
+          default-label: video15
           clone-on-start: true
 management:
   endpoint:
