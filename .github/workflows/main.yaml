@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run a one-line script
-        run: echo "¡Hola desde GitHub Actions!"
+        run: echo "¡Desde mi Gina!"
